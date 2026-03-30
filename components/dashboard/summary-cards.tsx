@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { ResetPeriodButton } from "@/components/dashboard/reset-period-button";
 import { cn, formatCurrency, formatPercent } from "@/lib/utils/format";
 
 type SummaryCardsProps = {
@@ -10,6 +11,7 @@ type SummaryCardsProps = {
     roi: number;
     winRate: number;
     averageStake: number;
+    currentPeriodProfit: number;
   };
 };
 
@@ -25,6 +27,12 @@ const items = (metrics: SummaryCardsProps["metrics"]) => [
   { label: "ROI", value: formatPercent(metrics.roi) },
   { label: "Win Rate", value: formatPercent(metrics.winRate) },
   { label: "Average Stake", value: formatCurrency(metrics.averageStake) },
+  {
+    label: "Current Period P/L",
+    value: formatCurrency(metrics.currentPeriodProfit),
+    accent: metrics.currentPeriodProfit >= 0 ? "text-[var(--profit)]" : "text-[var(--loss)]",
+    withReset: true,
+  },
 ];
 
 export function SummaryCards({ metrics }: SummaryCardsProps) {
@@ -36,6 +44,7 @@ export function SummaryCards({ metrics }: SummaryCardsProps) {
           <p className={cn("mt-3 text-3xl font-semibold tracking-tight text-slate-900", item.accent)}>
             {item.value}
           </p>
+          {item.withReset ? <ResetPeriodButton /> : null}
         </Card>
       ))}
     </div>

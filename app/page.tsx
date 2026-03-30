@@ -7,16 +7,18 @@ import { EmptyState } from "@/components/ui/empty-state";
 import {
   getBetVolumeSeries,
   getCumulativeProfitSeries,
+  getCurrentPeriodProfit,
   getDashboardMetrics,
   getMonthlyProfitSeries,
   getSportBreakdown,
 } from "@/lib/calculations/analytics";
+import { getAppConfig } from "@/lib/data/app-config";
 import { getBets } from "@/lib/data/bets";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const bets = await getBets({ sort: "desc" });
+  const [bets, appConfig] = await Promise.all([getBets({ sort: "desc" }), getAppConfig()]);
 
   if (bets.length === 0) {
     return (
@@ -29,7 +31,10 @@ export default async function DashboardPage() {
     );
   }
 
-  const metrics = getDashboardMetrics(bets);
+  const metrics = {
+    ...getDashboardMetrics(bets),
+    currentPeriodProfit: getCurrentPeriodProfit(bets, appConfig.currentPeriodStart),
+  };
   const sportBreakdown = getSportBreakdown(bets);
   const cumulativeProfit = getCumulativeProfitSeries(bets);
   const monthlyProfit = getMonthlyProfitSeries(bets);

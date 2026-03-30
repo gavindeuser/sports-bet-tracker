@@ -39,3 +39,10 @@ model Bet {
   @@index([sport])
   @@index([result])
 }
+
+model AppConfig {
+  id                 Int       @id
+  currentPeriodStart DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}

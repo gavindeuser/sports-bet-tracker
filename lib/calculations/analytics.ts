@@ -33,6 +33,14 @@ export type BetVolumePoint = {
   bets: number;
 };
 
+export function getCurrentPeriodProfit(bets: Bet[], currentPeriodStart: Date | null) {
+  const relevantBets = currentPeriodStart
+    ? bets.filter((bet) => bet.createdAt.getTime() >= currentPeriodStart.getTime())
+    : bets;
+
+  return roundToCents(relevantBets.reduce((sum, bet) => sum + bet.profitLoss, 0));
+}
+
 function getBaseMetrics(bets: Bet[]): AggregateMetrics {
   const wins = bets.filter((bet) => bet.result === BetResult.WIN).length;
   const losses = bets.filter((bet) => bet.result === BetResult.LOSS).length;
