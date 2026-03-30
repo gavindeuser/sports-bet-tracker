@@ -108,6 +108,7 @@ Deployment-friendly details already in place:
 - `npm run prisma:migrate:deploy` is available for production migrations.
 - Next.js is configured with `outputFileTracingRoot` to avoid workspace root issues during hosted builds.
 - A Postgres-ready schema lives at `prisma/schema.postgres.prisma` so local SQLite can stay untouched until you are ready to switch.
+- The active `prisma/schema.prisma` is now selected automatically based on `DATABASE_URL`, so local SQLite and hosted Postgres can share one repo.
 
 ### Recommended Production Rollout
 
