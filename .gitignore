@@ -1,0 +1,5 @@
+cd /Users/gavindeuser/Documents/Playground
+echo "prisma/*.bak" >> .gitignore
+git rm --cached prisma/dev.db.2026-03-30T15-42-48-061Z.bak
+git add .gitignore
+git commit --amend --no-edit
