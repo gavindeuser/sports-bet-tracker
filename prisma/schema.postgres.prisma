@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BetResult {
+  WIN
+  LOSS
+  PUSH
+  VOID
+}
+
+model Bet {
+  id           String    @id @default(cuid())
+  datePlaced   DateTime
+  dateSettled  DateTime?
+  sport        String
+  league       String
+  event        String
+  betType      String
+  selection    String
+  americanOdds Int
+  stake        Float
+  result       BetResult
+  payout       Float
+  profitLoss   Float
+  isLive       Boolean   @default(false)
+  isParlay     Boolean   @default(false)
+  legs         Int       @default(1)
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([datePlaced(sort: Desc)])
+  @@index([sport])
+  @@index([result])
+}
