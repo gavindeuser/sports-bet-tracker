@@ -9,7 +9,7 @@
     "build": "next build",
     "prestart": "node scripts/select-prisma-schema.mjs && prisma generate",
     "start": "next start",
-    "postinstall": "node scripts/select-prisma-schema.mjs && prisma generate",
+    "postinstall": "echo postinstall-complete",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "node scripts/select-prisma-schema.mjs && prisma generate",
