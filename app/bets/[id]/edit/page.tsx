@@ -2,6 +2,8 @@ import { BetForm } from "@/components/bets/bet-form";
 import { Card } from "@/components/ui/card";
 import { getBetByIdOrThrow, getFilterOptions } from "@/lib/data/bets";
 
+export const dynamic = "force-dynamic";
+
 type EditBetPageProps = {
   params: Promise<{
     id: string;

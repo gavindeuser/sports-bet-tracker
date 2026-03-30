@@ -13,6 +13,8 @@ import {
 } from "@/lib/calculations/analytics";
 import { getBets } from "@/lib/data/bets";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const bets = await getBets({ sort: "desc" });
 

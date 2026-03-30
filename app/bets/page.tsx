@@ -6,6 +6,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { getBets, getFilterOptions } from "@/lib/data/bets";
 import { parseBetFilters } from "@/lib/utils/query";
 
+export const dynamic = "force-dynamic";
+
 type BetsPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };

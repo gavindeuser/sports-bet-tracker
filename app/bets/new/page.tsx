@@ -2,6 +2,8 @@ import { BetForm } from "@/components/bets/bet-form";
 import { Card } from "@/components/ui/card";
 import { getFilterOptions } from "@/lib/data/bets";
 
+export const dynamic = "force-dynamic";
+
 export default async function NewBetPage() {
   const { sports } = await getFilterOptions();
 
