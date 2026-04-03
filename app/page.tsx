@@ -46,9 +46,6 @@ export default async function DashboardPage() {
         <div>
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-[var(--accent)]">Dashboard</p>
           <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900">One place for your betting history and results.</h2>
-          <p className="mt-2 max-w-2xl text-sm text-slate-600">
-            Everything here is calculated directly from your database, so totals, tables, and charts stay consistent across refreshes.
-          </p>
         </div>
         <Link href="/bets/new" className="rounded-full bg-teal-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-teal-800">
           Add Bet
