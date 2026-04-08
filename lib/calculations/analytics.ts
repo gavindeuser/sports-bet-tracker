@@ -37,27 +37,32 @@ export type BetVolumePoint = {
   bets: number;
 };
 
+function getSettledBets(bets: Bet[]) {
+  return bets.filter((bet) => bet.result !== BetResult.ACTIVE);
+}
+
 export function getCurrentPeriodProfit(bets: Bet[], currentPeriodStart: Date | null) {
   const relevantBets = currentPeriodStart
-    ? bets.filter((bet) => bet.createdAt.getTime() >= currentPeriodStart.getTime())
-    : bets;
+    ? getSettledBets(bets).filter((bet) => bet.createdAt.getTime() >= currentPeriodStart.getTime())
+    : getSettledBets(bets);
 
   return roundToCents(relevantBets.reduce((sum, bet) => sum + bet.profitLoss, 0));
 }
 
-function getBaseMetrics(bets: Bet[]): AggregateMetrics {
-  const wins = bets.filter((bet) => bet.result === BetResult.WIN).length;
-  const losses = bets.filter((bet) => bet.result === BetResult.LOSS).length;
-  const totalStaked = roundToCents(bets.reduce((sum, bet) => sum + bet.stake, 0));
-  const totalPayout = roundToCents(bets.reduce((sum, bet) => sum + bet.payout, 0));
-  const totalProfit = roundToCents(bets.reduce((sum, bet) => sum + bet.profitLoss, 0));
+function getBaseMetrics(bets: Bet[], options?: { countAllBets?: boolean }): AggregateMetrics {
+  const settledBets = getSettledBets(bets);
+  const wins = settledBets.filter((bet) => bet.result === BetResult.WIN).length;
+  const losses = settledBets.filter((bet) => bet.result === BetResult.LOSS).length;
+  const totalStaked = roundToCents(settledBets.reduce((sum, bet) => sum + bet.stake, 0));
+  const totalPayout = roundToCents(settledBets.reduce((sum, bet) => sum + bet.payout, 0));
+  const totalProfit = roundToCents(settledBets.reduce((sum, bet) => sum + bet.profitLoss, 0));
 
   return {
-    totalBets: bets.length,
+    totalBets: options?.countAllBets ? bets.length : settledBets.length,
     totalStaked,
     totalPayout,
     totalProfit,
-    averageStake: bets.length ? roundToCents(totalStaked / bets.length) : 0,
+    averageStake: settledBets.length ? roundToCents(totalStaked / settledBets.length) : 0,
     wins,
     losses,
     winRate: calculateWinRate(wins, losses),
@@ -66,7 +71,7 @@ function getBaseMetrics(bets: Bet[]): AggregateMetrics {
 }
 
 export function getDashboardMetrics(bets: Bet[]) {
-  return getBaseMetrics(bets);
+  return getBaseMetrics(bets, { countAllBets: true });
 }
 
 export function getSportBreakdown(bets: Bet[]): SportBreakdown[] {
@@ -102,7 +107,7 @@ export function getBetTypeBreakdown(bets: Bet[]): BetTypeBreakdown[] {
 export function getCumulativeProfitSeries(bets: Bet[]): CumulativeProfitPoint[] {
   let runningProfit = 0;
 
-  return [...bets]
+  return [...getSettledBets(bets)]
     .sort((left, right) => left.datePlaced.getTime() - right.datePlaced.getTime())
     .map((bet) => {
       runningProfit = roundToCents(runningProfit + bet.profitLoss);
@@ -116,7 +121,7 @@ export function getCumulativeProfitSeries(bets: Bet[]): CumulativeProfitPoint[] 
 export function getMonthlyProfitSeries(bets: Bet[]): MonthlyProfitPoint[] {
   const months = new Map<string, number>();
 
-  bets.forEach((bet) => {
+  getSettledBets(bets).forEach((bet) => {
     const month = bet.datePlaced.toISOString().slice(0, 7);
     months.set(month, roundToCents((months.get(month) ?? 0) + bet.profitLoss));
   });
@@ -129,7 +134,7 @@ export function getMonthlyProfitSeries(bets: Bet[]): MonthlyProfitPoint[] {
 export function getBetVolumeSeries(bets: Bet[]): BetVolumePoint[] {
   const counts = new Map<string, number>();
 
-  bets.forEach((bet) => {
+  getSettledBets(bets).forEach((bet) => {
     const date = bet.datePlaced.toISOString().slice(0, 10);
     counts.set(date, (counts.get(date) ?? 0) + 1);
   });

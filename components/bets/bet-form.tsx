@@ -121,7 +121,7 @@ export function BetForm({ mode, initialValues, sports }: BetFormProps) {
           stake: Number(form.stake),
           americanOdds: Number(form.americanOdds),
           legs: Number(form.legs),
-          dateSettled: form.datePlaced,
+          dateSettled: form.result === BetResult.ACTIVE ? null : form.datePlaced,
         }),
       });
 

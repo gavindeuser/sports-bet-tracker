@@ -12,6 +12,7 @@ enum BetResult {
   LOSS
   PUSH
   VOID
+  ACTIVE
 }
 
 model Bet {

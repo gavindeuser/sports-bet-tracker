@@ -23,6 +23,10 @@ export function calculateProfitLoss({ result, payout, stake }: BetMathInput) {
     return roundToCents(-stake);
   }
 
+  if (result === BetResult.ACTIVE) {
+    return 0;
+  }
+
   return 0;
 }
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Bet } from "@prisma/client";
+import { Bet, BetResult } from "@prisma/client";
 
 import { DeleteBetButton } from "@/components/bets/delete-bet-button";
 import { Card } from "@/components/ui/card";
@@ -42,10 +42,29 @@ export function BetsTable({ bets }: BetsTableProps) {
                 <td className="px-5 py-4 text-slate-700">{bet.americanOdds > 0 ? `+${bet.americanOdds}` : bet.americanOdds}</td>
                 <td className="px-5 py-4 text-slate-700">{formatCurrency(bet.stake)}</td>
                 <td className="px-5 py-4">
-                  <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700">{bet.result}</span>
+                  <div className="space-y-1">
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                        bet.result === BetResult.ACTIVE ? "bg-amber-50 text-amber-700" : "bg-white text-slate-700"
+                      }`}
+                    >
+                      {bet.result}
+                    </span>
+                    {bet.result === BetResult.ACTIVE ? (
+                      <div className="text-xs text-slate-500">Potential payout {formatCurrency(bet.payout)}</div>
+                    ) : null}
+                  </div>
                 </td>
-                <td className={`px-5 py-4 font-semibold ${bet.profitLoss >= 0 ? "text-[var(--profit)]" : "text-[var(--loss)]"}`}>
-                  {formatCurrency(bet.profitLoss)}
+                <td
+                  className={`px-5 py-4 font-semibold ${
+                    bet.result === BetResult.ACTIVE
+                      ? "text-slate-400"
+                      : bet.profitLoss >= 0
+                        ? "text-[var(--profit)]"
+                        : "text-[var(--loss)]"
+                  }`}
+                >
+                  {bet.result === BetResult.ACTIVE ? "--" : formatCurrency(bet.profitLoss)}
                 </td>
                 <td className="px-5 py-4">
                   <div className="flex flex-wrap gap-2">

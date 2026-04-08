@@ -44,7 +44,7 @@ const oddsField = z.coerce
 export const betInputSchema = z
   .object({
     datePlaced: dateField,
-    dateSettled: z.string().trim().optional().or(z.literal("")),
+    dateSettled: z.string().trim().optional().nullable().or(z.literal("")),
     sport: z.string().trim().min(1, "Sport is required"),
     league: z.string().trim().min(1, "League is required"),
     event: z.string().trim().min(1, "Event is required"),
@@ -104,10 +104,26 @@ export const betInputSchema = z
       });
     }
 
+    if (value.result === BetResult.ACTIVE && value.payout < value.stake) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Active bets should keep a projected payout greater than or equal to stake",
+        path: ["payout"],
+      });
+    }
+
     if (value.dateSettled && new Date(value.dateSettled) < new Date(value.datePlaced)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Settled date cannot be earlier than placed date",
+        path: ["dateSettled"],
+      });
+    }
+
+    if (value.result === BetResult.ACTIVE && value.dateSettled) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Active bets cannot have a settled date",
         path: ["dateSettled"],
       });
     }
@@ -128,7 +144,7 @@ export function parseBetInput(payload: unknown) {
 
   return {
     datePlaced: parseDateOnly(parsed.datePlaced),
-    dateSettled: parsed.dateSettled ? parseDateOnly(parsed.dateSettled) : null,
+    dateSettled: parsed.result === BetResult.ACTIVE ? null : parsed.dateSettled ? parseDateOnly(parsed.dateSettled) : null,
     sport: normalizedSport,
     league: normalizedSport,
     event: parsed.event,
