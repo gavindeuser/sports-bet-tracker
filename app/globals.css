@@ -45,6 +45,16 @@ textarea {
   font: inherit;
 }
 
+.no-spinner {
+  appearance: textfield;
+}
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 ::selection {
   background: rgba(15, 118, 110, 0.18);
 }

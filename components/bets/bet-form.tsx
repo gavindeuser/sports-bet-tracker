@@ -184,21 +184,21 @@ export function BetForm({ mode, initialValues, sports }: BetFormProps) {
         <Field label="Selection">
           <input value={form.selection} onChange={(event) => updateField("selection", event.target.value)} className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3" />
         </Field>
-        <Field label="Odds">
-          <input
-            type="number"
-            value={form.americanOdds}
-            onChange={(event) => updateField("americanOdds", event.target.value === "" ? "" : Number(event.target.value))}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3"
-          />
-        </Field>
         <Field label="Stake">
           <input
             type="number"
             step="0.01"
             value={form.stake}
             onChange={(event) => updateField("stake", event.target.value === "" ? "" : Number(event.target.value))}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3"
+            className="no-spinner w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3"
+          />
+        </Field>
+        <Field label="Odds">
+          <input
+            type="number"
+            value={form.americanOdds}
+            onChange={(event) => updateField("americanOdds", event.target.value === "" ? "" : Number(event.target.value))}
+            className="no-spinner w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-3"
           />
         </Field>
         <Field label="Result">
