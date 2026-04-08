@@ -18,6 +18,11 @@
     "prisma:generate:postgres": "prisma generate --schema prisma/schema.postgres.prisma",
     "prisma:push:postgres": "prisma db push --schema prisma/schema.postgres.prisma",
     "import:postgres": "node scripts/import-local-sqlite-to-postgres.mjs",
+    "reclassify:basketball": "PRISMA_DB_PROVIDER=sqlite node scripts/select-prisma-schema.mjs && prisma generate && node scripts/reclassify-basketball-sports.mjs",
+    "reclassify:hockey": "PRISMA_DB_PROVIDER=sqlite node scripts/select-prisma-schema.mjs && prisma generate && node scripts/reclassify-other-hockey.mjs",
+    "reclassify:golf": "PRISMA_DB_PROVIDER=sqlite node scripts/select-prisma-schema.mjs && prisma generate && node scripts/reclassify-other-golf.mjs",
+    "reclassify:soccer": "PRISMA_DB_PROVIDER=sqlite node scripts/select-prisma-schema.mjs && prisma generate && node scripts/reclassify-other-soccer.mjs",
+    "reclassify:motorsports": "PRISMA_DB_PROVIDER=sqlite node scripts/select-prisma-schema.mjs && prisma generate && node scripts/reclassify-other-motorsports.mjs",
     "seed": "prisma db seed"
   },
   "prisma": {

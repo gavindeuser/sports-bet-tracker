@@ -2,6 +2,7 @@ import { BetResult } from "@prisma/client";
 import { z } from "zod";
 
 import { calculateProfitLoss, normalizeLegs, roundToCents } from "@/lib/calculations/betting";
+import { classifySport } from "@/lib/utils/basketball-sport";
 
 function parseDateOnly(value: string) {
   const [year, month, day] = value.split("-").map(Number);
@@ -116,6 +117,7 @@ export type BetInput = z.infer<typeof betInputSchema>;
 
 export function parseBetInput(payload: unknown) {
   const parsed = betInputSchema.parse(payload);
+  const normalizedSport = classifySport(parsed.sport, parsed.selection);
   const profitLoss = roundToCents(
     calculateProfitLoss({
       result: parsed.result,
@@ -127,8 +129,8 @@ export function parseBetInput(payload: unknown) {
   return {
     datePlaced: parseDateOnly(parsed.datePlaced),
     dateSettled: parsed.dateSettled ? parseDateOnly(parsed.dateSettled) : null,
-    sport: parsed.sport,
-    league: parsed.league,
+    sport: normalizedSport,
+    league: normalizedSport,
     event: parsed.event,
     betType: parsed.betType,
     selection: parsed.selection,
