@@ -18,6 +18,10 @@ export type SportBreakdown = AggregateMetrics & {
   sport: string;
 };
 
+export type BetTypeBreakdown = AggregateMetrics & {
+  label: "Straight" | "Parlay";
+};
+
 export type CumulativeProfitPoint = {
   date: string;
   profit: number;
@@ -80,6 +84,19 @@ export function getSportBreakdown(bets: Bet[]): SportBreakdown[] {
       ...getBaseMetrics(sportBets),
     }))
     .sort((left, right) => right.totalProfit - left.totalProfit);
+}
+
+export function getBetTypeBreakdown(bets: Bet[]): BetTypeBreakdown[] {
+  return [
+    {
+      label: "Straight",
+      ...getBaseMetrics(bets.filter((bet) => !bet.isParlay)),
+    },
+    {
+      label: "Parlay",
+      ...getBaseMetrics(bets.filter((bet) => bet.isParlay)),
+    },
+  ];
 }
 
 export function getCumulativeProfitSeries(bets: Bet[]): CumulativeProfitPoint[] {

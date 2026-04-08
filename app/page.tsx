@@ -1,10 +1,12 @@
 import Link from "next/link";
 
 import { ChartCard } from "@/components/charts/chart-card";
+import { BetTypeBreakdown } from "@/components/dashboard/bet-type-breakdown";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
 import { SportBreakdown } from "@/components/dashboard/sport-breakdown";
 import { EmptyState } from "@/components/ui/empty-state";
 import {
+  getBetTypeBreakdown,
   getBetVolumeSeries,
   getCumulativeProfitSeries,
   getCurrentPeriodProfit,
@@ -36,6 +38,7 @@ export default async function DashboardPage() {
     currentPeriodProfit: getCurrentPeriodProfit(bets, appConfig.currentPeriodStart),
   };
   const sportBreakdown = getSportBreakdown(bets);
+  const betTypeBreakdown = getBetTypeBreakdown(bets);
   const cumulativeProfit = getCumulativeProfitSeries(bets);
   const monthlyProfit = getMonthlyProfitSeries(bets);
   const betVolume = getBetVolumeSeries(bets);
@@ -71,6 +74,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
+        <BetTypeBreakdown items={betTypeBreakdown} />
         <ChartCard
           title="Monthly Profit/Loss"
           description="Monthly performance view for a faster trend check."
@@ -80,6 +84,9 @@ export default async function DashboardPage() {
           type="bar"
           color="#d97706"
         />
+      </div>
+
+      <div>
         <ChartCard
           title="Bet Volume Over Time"
           description="Daily number of tracked bets over time."
