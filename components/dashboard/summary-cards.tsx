@@ -22,7 +22,12 @@ const items = (metrics: SummaryCardsProps["metrics"]) => [
   {
     label: "Net Profit/Loss",
     value: formatCurrency(metrics.totalProfit),
-    accent: metrics.totalProfit >= 0 ? "text-[var(--profit)]" : "text-[var(--loss)]",
+    accent:
+      metrics.totalProfit > 0
+        ? "text-emerald-600"
+        : metrics.totalProfit < 0
+          ? "text-rose-600"
+          : "text-slate-900",
   },
   { label: "ROI", value: formatPercent(metrics.roi) },
   { label: "Win Rate", value: formatPercent(metrics.winRate) },
@@ -30,7 +35,12 @@ const items = (metrics: SummaryCardsProps["metrics"]) => [
   {
     label: "Current Period P/L",
     value: formatCurrency(metrics.currentPeriodProfit),
-    accent: metrics.currentPeriodProfit >= 0 ? "text-[var(--profit)]" : "text-[var(--loss)]",
+    accent:
+      metrics.currentPeriodProfit > 0
+        ? "text-emerald-600"
+        : metrics.currentPeriodProfit < 0
+          ? "text-rose-600"
+          : "text-slate-900",
     withReset: true,
   },
 ];
@@ -41,7 +51,7 @@ export function SummaryCards({ metrics }: SummaryCardsProps) {
       {items(metrics).map((item) => (
         <Card key={item.label}>
           <p className="text-sm text-slate-500">{item.label}</p>
-          <p className={cn("mt-3 text-3xl font-semibold tracking-tight text-slate-900", item.accent)}>
+          <p className={cn("mt-3 text-3xl font-semibold tracking-tight", item.accent ?? "text-slate-900")}>
             {item.value}
           </p>
           {item.withReset ? <ResetPeriodButton /> : null}
